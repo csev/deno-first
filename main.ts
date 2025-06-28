@@ -13,7 +13,7 @@ app.get("/kv/get/:key{.*}", async (c) => {
 // List records with a key prefix
 app.get("/kv/list/:key{.*}", async (c) => {
   const key = c.req.param("key");
-  const cursor = c.req.param("cursor");
+  const cursor = c.req.query("cursor");
   console.log("list key", key, cursor);
   const extra = {'limit': 1};
   if ( typeof cursor == 'string' && cursor.length > 0 ) {
