@@ -13,12 +13,13 @@ app.get("/kv/get/:key{.*}", async (c) => {
 // List records with a key prefix
 app.get("/kv/list/:key{.*}", async (c) => {
   const key = c.req.param("key");
-  const iter = await kv.get({ prefix: key.split('/') });
+  console.log("list key", key);
+  const iter = await kv.list({ prefix: key.split('/') });
+  console.log('iter return', iter);
   const records = [];
   for await (const entry of iter) {
+    console.log(entry);
     records.push(entry);
-    console.log(entry.key);
-    console.log(entry.value);
   }
   console.log('iter', iter.cursor);
   return c.json({'records': records, 'cursor': iter.cursor});
