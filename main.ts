@@ -14,7 +14,7 @@ app.get("/kv/get/:key{.*}", async (c) => {
 app.get("/kv/list/:key{.*}", async (c) => {
   const key = c.req.param("key");
   console.log("list key", key);
-  const iter = await kv.list({ prefix: key.split('/') });
+  const iter = await kv.list({ prefix: key.split('/') }, {'limit': 1} );
   console.log('iter return', iter);
   const records = [];
   for await (const entry of iter) {
