@@ -52,7 +52,7 @@ app.delete("/kv/delete_prefix/:key{.*}", async (c) => {
   const keys = [];
   for await (const entry of iter) {
     kv.delete(entry.key);
-    keys.push(entry);
+    keys.push(entry.key);
   }
   console.log("Keys with prefix '.key.' deleted:", keys.length);
   return c.json({'keys': keys});
