@@ -115,7 +115,16 @@ app.all('/dump/*', async (c) => {
 function checkToken(c) {
   const token = c.req.query("token");
   if ( token == '42' ) return 42;
-  throw new HTTPException (401, { message: 'Missing of invalid token' })
+  
+  const errorResponse = new Response('Unauthorized', {
+    status: 401,
+    headers: {
+      Authenticate: 'error="invalid_token"',
+    },
+  })
+  
+  throw new HTTPException(401, { res: errorResponse })
+    
 }
 
 Deno.serve(app.fetch);
