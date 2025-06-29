@@ -29,12 +29,18 @@ app.get("/kv/list/:key{.*}", async (c) => {
   return c.json({'records': records, 'cursor': iter.cursor});
 });
 
-
 // Set a record by key (POST body is JSON)
 app.post("/kv/set/:key{.*}", async (c) => {
   const key = c.req.param("key");
   const body = await c.req.json();
   const result = await kv.set(key.split('/'), body);
+  return c.json(result);
+});
+
+// Delete a record
+app.delete("/kv/delete/:key{.*}", async (c) => {
+  const key = c.req.param("key");
+  const result = await kv.delete(key.split('/'));
   return c.json(result);
 });
 
