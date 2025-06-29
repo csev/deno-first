@@ -111,7 +111,7 @@ app.all('/dump/*', async (c) => {
   return c.json(dump, 200)
 });
 
-function checkToken(req) {
+function checkToken(c) {
   const token = c.req.query("token");
   if ( token == '42' ) return 42;
   throw new HTTPException (401, { message: 'Missing of invalid token' })
