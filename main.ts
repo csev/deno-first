@@ -38,7 +38,7 @@ app.post("/kv/set/:key{.*}", async (c) => {
   return c.json(result);
 });
 
-// Get a record by key
+// Dump request data
 app.get("/dump", async (c) => {
   const retval = {'req.url': c.req.url, 'req': c.req};
   return c.json(retval);
