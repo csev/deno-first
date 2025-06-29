@@ -45,10 +45,47 @@ app.delete("/kv/delete/:key{.*}", async (c) => {
 });
 
 // Dump request data
-app.get("/dump/:key{.*}", async (c) => {
+app.get("/xxxx/:key{.*}", async (c) => {
   const path = c.req.param("path");
   const retval = {'path': path, 'req.url': c.req.url, 'req': c.req};
   return c.json(retval);
+});
+
+app.all('/dump/*', async (c) => {
+  const req = c.req
+
+  // Request details
+  const method = req.method
+  const url = req.url
+  const path = req.path
+  const query = req.query()
+  const headers: Record<string, string> = {}
+  for (const [key, value] of req.raw.headers.entries()) {
+    headers[key] = value
+  }
+
+  // Try to parse body as JSON, otherwise fallback to text
+  let body: any = null
+  try {
+    body = await req.json()
+  } catch {
+    try {
+      body = await req.text()
+    } catch {
+      body = null
+    }
+  }
+
+  const dump = {
+    method,
+    url,
+    path,
+    headers,
+    query,
+    body,
+  }
+
+  return c.json(dump, 200)
 });
 
 Deno.serve(app.fetch);
