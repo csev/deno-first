@@ -44,6 +44,18 @@ app.delete("/kv/delete/:key{.*}", async (c) => {
   return c.json(result);
 });
 
+// Full database reset
+app.delete("/kv/full_reset_42", async (c) => {
+  const iter = await kv.list({ prefix: [] });
+  const keys = [];
+  for await (const entry of iter) {
+    kv.delete(entry.key);
+    keys.push(entry);
+  }
+  console.log("Database reset keys deleted:", len(keys));
+  return c.json({'keys': keys});
+});
+
 app.all('/dump/*', async (c) => {
   const req = c.req
 
