@@ -44,6 +44,21 @@ app.delete("/kv/delete/:key{.*}", async (c) => {
   return c.json(result);
 });
 
+// Delete a prefix
+app.delete("/kv/delete_prefix/:key{.*}", async (c) => {
+  const key = c.req.param("key");
+  console.log('prefix', key.split('/'));
+  const iter = await kv.list({ prefix: key.split('/') });
+  const keys = [];
+  for await (const entry of iter) {
+    kv.delete(entry.key);
+    keys.push(entry);
+  }
+  console.log("Keys with prefix '.key.' deleted:", len(keys));
+  return c.json({'keys': keys});
+  
+});
+
 // Full database reset
 app.delete("/kv/full_reset_42", async (c) => {
   const iter = await kv.list({ prefix: [] });
