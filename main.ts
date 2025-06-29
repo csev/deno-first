@@ -40,7 +40,7 @@ app.post("/kv/set/:key{.*}", async (c) => {
 
 // Get a record by key
 app.get("/dump", async (c) => {
-  return c.json(c);
+  return c.json(c.req);
 });
 
 Deno.serve(app.fetch);
