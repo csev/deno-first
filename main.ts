@@ -116,15 +116,14 @@ function checkToken(c) {
   const token = c.req.query("token");
   if ( token == '42' ) return 42;
   
-  const errorResponse = new Response('Unauthorized', {
-    status: 401,
-    headers: {
-      Authenticate: 'error="invalid_token"',
-    },
-  })
-  
-  throw new HTTPException(401, { res: errorResponse })
-    
+  throw new HTTPException(401, { message: 'Missing or invalid token' }); 
 }
+
+app.onError((err, c) => {
+  if (err instanceof HTTPException) {
+    return c.text(err.message, err.status);
+  }
+  return c.text('Internal Server Error', 500);
+});
 
 Deno.serve(app.fetch);
