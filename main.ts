@@ -3,6 +3,8 @@ import { Hono } from "https://deno.land/x/hono@v3.4.1/mod.ts";
 const app = new Hono();
 const kv = await Deno.openKv();
 
+// Basic KV operations to support admim interface
+
 // Get a record by key
 app.get("/kv/get/:key{.*}", async (c) => {
   const key = c.req.param("key");
@@ -14,16 +16,13 @@ app.get("/kv/get/:key{.*}", async (c) => {
 app.get("/kv/list/:key{.*}", async (c) => {
   const key = c.req.param("key");
   const cursor = c.req.query("cursor");
-  console.log("list key", key, cursor);
-  const extra = {'limit': 1};
+  const extra = {'limit': 100};
   if ( typeof cursor == 'string' && cursor.length > 0 ) {
     extra['cursor'] = cursor;
   }
   const iter = await kv.list({ prefix: key.split('/') }, extra );
-  console.log('iter return', iter);
   const records = [];
   for await (const entry of iter) {
-    console.log(entry);
     records.push(entry);
   }
   console.log('iter', iter.cursor);
