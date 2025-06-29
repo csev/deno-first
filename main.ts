@@ -7,6 +7,7 @@ const kv = await Deno.openKv();
 
 // Get a record by key
 app.get("/kv/get/:key{.*}", async (c) => {
+  checktoken(c);
   const key = c.req.param("key");
   const result = await kv.get(key.split('/'));
   return c.json(result);
@@ -14,6 +15,7 @@ app.get("/kv/get/:key{.*}", async (c) => {
 
 // List records with a key prefix
 app.get("/kv/list/:key{.*}", async (c) => {
+  checktoken(c);
   const key = c.req.param("key");
   const cursor = c.req.query("cursor");
   const extra = {'limit': 100};
@@ -30,6 +32,7 @@ app.get("/kv/list/:key{.*}", async (c) => {
 
 // Set a record by key (POST body is JSON)
 app.post("/kv/set/:key{.*}", async (c) => {
+  checktoken(c);
   const key = c.req.param("key");
   const body = await c.req.json();
   const result = await kv.set(key.split('/'), body);
@@ -38,6 +41,7 @@ app.post("/kv/set/:key{.*}", async (c) => {
 
 // Delete a record
 app.delete("/kv/delete/:key{.*}", async (c) => {
+  checktoken(c);
   const key = c.req.param("key");
   const result = await kv.delete(key.split('/'));
   return c.json(result);
@@ -45,6 +49,7 @@ app.delete("/kv/delete/:key{.*}", async (c) => {
 
 // Delete a prefix
 app.delete("/kv/delete_prefix/:key{.*}", async (c) => {
+  checktoken(c);
   const key = c.req.param("key");
   const iter = await kv.list({ prefix: key.split('/') });
   const keys = [];
@@ -58,6 +63,7 @@ app.delete("/kv/delete_prefix/:key{.*}", async (c) => {
 
 // Full database reset
 app.delete("/kv/full_reset_42", async (c) => {
+  checktoken(c);
   const iter = await kv.list({ prefix: [] });
   const keys = [];
   for await (const entry of iter) {
@@ -104,5 +110,11 @@ app.all('/dump/*', async (c) => {
 
   return c.json(dump, 200)
 });
+
+function checkToken(req) {
+  const token = c.req.query("token");
+  if ( token == '42' ) return 42;
+  throw new HTTPException (401, { message: 'Missing of invalid token' })
+}
 
 Deno.serve(app.fetch);
