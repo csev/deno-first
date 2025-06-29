@@ -45,8 +45,9 @@ app.delete("/kv/delete/:key{.*}", async (c) => {
 });
 
 // Dump request data
-app.get("/dump", async (c) => {
-  const retval = {'req.url': c.req.url, 'req': c.req};
+app.get("/dump/:key{.*}", async (c) => {
+  const path = c.req.param("path");
+  const retval = {'path': path, 'req.url': c.req.url, 'req': c.req};
   return c.json(retval);
 });
 
