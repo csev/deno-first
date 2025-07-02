@@ -96,6 +96,8 @@ app.all('/dump/*', async (c) => {
     headers[key] = value
   }
 
+  console.log('Dump headers', headers);
+
   // Try to parse body as JSON, otherwise fallback to text
   let body: any = null
   try {
