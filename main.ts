@@ -7,6 +7,7 @@ const kv = await Deno.openKv();
 // Basic KV operations to support admim interface
 
 // Get a record by key
+// https://dj4e-deno-kv-api-10.deno.dev/get/books/Hamlet?key=123
 app.get("/kv/get/:key{.*}", async (c) => {
   checkToken(c);
   const key = c.req.param("key");
@@ -15,6 +16,7 @@ app.get("/kv/get/:key{.*}", async (c) => {
 });
 
 // List records with a key prefix
+// https://dj4e-deno-kv-api-10.deno.dev/list/books
 app.get("/kv/list/:key{.*}", async (c) => {
   checkToken(c);
   const key = c.req.param("key");
@@ -32,6 +34,7 @@ app.get("/kv/list/:key{.*}", async (c) => {
 });
 
 // Set a record by key (POST body is JSON)
+// https://dj4e-deno-kv-api-10.deno.dev/set/books/Hamlet?key=123
 app.post("/kv/set/:key{.*}", async (c) => {
   checkToken(c);
   const key = c.req.param("key");
@@ -41,6 +44,7 @@ app.post("/kv/set/:key{.*}", async (c) => {
 });
 
 // Delete a record
+// https://dj4e-deno-kv-api-10.deno.dev/delete/books/Hamlet?key=123
 app.delete("/kv/delete/:key{.*}", async (c) => {
   checkToken(c);
   const key = c.req.param("key");
@@ -49,6 +53,7 @@ app.delete("/kv/delete/:key{.*}", async (c) => {
 });
 
 // Delete a prefix
+// https://dj4e-deno-kv-api-10.deno.dev/delete/books/nonfiction?key=123
 app.delete("/kv/delete_prefix/:key{.*}", async (c) => {
   checkToken(c);
   const key = c.req.param("key");
@@ -63,6 +68,7 @@ app.delete("/kv/delete_prefix/:key{.*}", async (c) => {
 });
 
 // Full database reset
+// https://dj4e-deno-kv-api-10.deno.dev/full_reset_42?key=123
 app.delete("/kv/full_reset_42", async (c) => {
   checkToken(c);
   const iter = await kv.list({ prefix: [] });
@@ -75,6 +81,8 @@ app.delete("/kv/full_reset_42", async (c) => {
   return c.json({'keys': keys});
 });
 
+// Dump the request object for learning and debugging
+// https://dj4e-deno-kv-api-10.deno.dev/dump/stuff/goes_here?key=123
 app.all('/dump/*', async (c) => {
   const req = c.req
 
@@ -112,6 +120,7 @@ app.all('/dump/*', async (c) => {
   return c.json(dump, 200)
 });
 
+// Insure security
 function checkToken(c) {
   const token = c.req.query("token");
   if ( token == '42' ) return 42;
@@ -119,6 +128,7 @@ function checkToken(c) {
   throw new HTTPException(401, { message: 'Missing or invalid token' }); 
 }
 
+// Make sure we return the correct HTTP Status code when we throw an exception
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
     return c.text(err.message, err.status);
