@@ -4,7 +4,22 @@ import { HTTPException } from "https://deno.land/x/hono@v3.12.10/http-exception.
 const app = new Hono();
 const kv = await Deno.openKv();
 
+app.get("/hello", async (c) => {
+  const result = await kv.get(key.split('/'));
+  return c.json(result);
+});
+
 // Basic KV operations to support admim interface
+
+// Set a record by key (POST body is JSON)
+// https://dj4e-deno-kv-api-10.deno.dev/set/books/Hamlet?key=123
+app.post("/kv/set/:key{.*}", async (c) => {
+  checkToken(c);
+  const key = c.req.param("key");
+  const body = await c.req.json();
+  const result = await kv.set(key.split('/'), body);
+  return c.json(result);
+});
 
 // Get a record by key
 // https://dj4e-deno-kv-api-10.deno.dev/get/books/Hamlet?key=123
@@ -31,16 +46,6 @@ app.get("/kv/list/:key{.*}", async (c) => {
     records.push(entry);
   }
   return c.json({'records': records, 'cursor': iter.cursor});
-});
-
-// Set a record by key (POST body is JSON)
-// https://dj4e-deno-kv-api-10.deno.dev/set/books/Hamlet?key=123
-app.post("/kv/set/:key{.*}", async (c) => {
-  checkToken(c);
-  const key = c.req.param("key");
-  const body = await c.req.json();
-  const result = await kv.set(key.split('/'), body);
-  return c.json(result);
 });
 
 // Delete a record
