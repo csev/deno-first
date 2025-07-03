@@ -63,7 +63,7 @@ app.delete("/kv/delete_prefix/:key{.*}", async (c) => {
     kv.delete(entry.key);
     keys.push(entry.key);
   }
-  console.log("Keys with prefix '.key.' deleted:", keys.length);
+  console.log("Keys with prefix", key, 'deleted:", keys.length);
   return c.json({'keys': keys});
 });
 
@@ -77,7 +77,7 @@ app.delete("/kv/full_reset_42", async (c) => {
     kv.delete(entry.key);
     keys.push(entry);
   }
-  console.log("Database reset keys deleted:", len(keys));
+  console.log("Database reset keys deleted:", keys.length);
   return c.json({'keys': keys});
 });
 
