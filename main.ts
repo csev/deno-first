@@ -4,7 +4,7 @@ import { HTTPException } from "https://deno.land/x/hono@v3.12.10/http-exception.
 const app = new Hono();
 const kv = await Deno.openKv();
 
-// Basic KV operations to support admim interface
+// Basic KV operations to support admin interface
 
 // Set a record by key (POST body is JSON)
 // https://pg4e-deno-kv-api-10.deno.dev/set/books/Hamlet?key=123
