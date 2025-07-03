@@ -4,11 +4,6 @@ import { HTTPException } from "https://deno.land/x/hono@v3.12.10/http-exception.
 const app = new Hono();
 const kv = await Deno.openKv();
 
-app.get("/hello", async (c) => {
-  const result = await kv.get(key.split('/'));
-  return c.json(result);
-});
-
 // Basic KV operations to support admim interface
 
 // Set a record by key (POST body is JSON)
