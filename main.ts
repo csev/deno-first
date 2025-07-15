@@ -13,8 +13,11 @@ app.post("/kv/set/:key{.*}", async (c) => {
   const key = c.req.param("key");
   const body = await c.req.json();
   var keyarr = key.split('/');
+  console.log("karr 1", karr);
   karr.unshift('student', token);
+  console.log("karr 2", karr);
   const result = await kv.set(karr, body);
+  console.log("result", result);
   return c.json(result);
 });
 
