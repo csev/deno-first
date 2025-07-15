@@ -9,33 +9,39 @@ const kv = await Deno.openKv();
 // Set a record by key (POST body is JSON)
 // https://pg4e-deno-kv-api-10.deno.dev/set/books/Hamlet?key=123
 app.post("/kv/set/:key{.*}", async (c) => {
-  checkToken(c);
+  const token = checkToken(c);
   const key = c.req.param("key");
   const body = await c.req.json();
-  const result = await kv.set(key.split('/'), body);
+  var keyarr = key.split('/');
+  karr.unshift('student', token);
+  const result = await kv.set(karr, body);
   return c.json(result);
 });
 
 // Get a record by key
 // https://pg4e-deno-kv-api-10.deno.dev/get/books/Hamlet?key=123
 app.get("/kv/get/:key{.*}", async (c) => {
-  checkToken(c);
+  const token = checkToken(c);
   const key = c.req.param("key");
-  const result = await kv.get(key.split('/'));
+  var keyarr = key.split('/');
+  karr.unshift('student', token);
+  const result = await kv.get(karrr);
   return c.json(result);
 });
 
 // List records with a key prefix
 // https://pg4e-deno-kv-api-10.deno.dev/list/books
 app.get("/kv/list/:key{.*}", async (c) => {
-  checkToken(c);
+  const token = checkToken(c);
   const key = c.req.param("key");
+  var keyarr = key.split('/');
+  karr.unshift('student', token);
   const cursor = c.req.query("cursor");
   const extra = {'limit': 100};
   if ( typeof cursor == 'string' && cursor.length > 0 ) {
     extra['cursor'] = cursor;
   }
-  const iter = await kv.list({ prefix: key.split('/') }, extra );
+  const iter = await kv.list({ prefix: karr }, extra );
   const records = [];
   for await (const entry of iter) {
     records.push(entry);
@@ -46,18 +52,22 @@ app.get("/kv/list/:key{.*}", async (c) => {
 // Delete a record
 // https://pg4e-deno-kv-api-10.deno.dev/delete/books/Hamlet?key=123
 app.delete("/kv/delete/:key{.*}", async (c) => {
-  checkToken(c);
+  const token = checkToken(c);
   const key = c.req.param("key");
-  const result = await kv.delete(key.split('/'));
+  var keyarr = key.split('/');
+  karr.unshift('student', token);
+  const result = await kv.delete(karr);
   return c.json(result);
 });
 
 // Delete a prefix
 // https://pg4e-deno-kv-api-10.deno.dev/delete/books/nonfiction?key=123
 app.delete("/kv/delete_prefix/:key{.*}", async (c) => {
-  checkToken(c);
+  const token = checkToken(c);
   const key = c.req.param("key");
-  const iter = await kv.list({ prefix: key.split('/') });
+  var keyarr = key.split('/');
+  karr.unshift('student', token);
+  const iter = await kv.list({ prefix: karr });
   const keys = [];
   for await (const entry of iter) {
     kv.delete(entry.key);
@@ -70,7 +80,7 @@ app.delete("/kv/delete_prefix/:key{.*}", async (c) => {
 // Full database reset
 // https://pg4e-deno-kv-api-10.deno.dev/full_reset_42?key=123
 app.delete("/kv/full_reset_42", async (c) => {
-  checkToken(c);
+  const token = checkToken(c);
   const iter = await kv.list({ prefix: [] });
   const keys = [];
   for await (const entry of iter) {
@@ -125,7 +135,7 @@ app.all('/dump/*', async (c) => {
 // Insure security
 function checkToken(c) {
   const token = c.req.query("token");
-  if ( token == '42' ) return 42;
+  if ( token == '42' ) return token;
   
   throw new HTTPException(401, { message: 'Missing or invalid token' }); 
 }
