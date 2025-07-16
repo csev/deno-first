@@ -156,7 +156,7 @@ function getExpireNow() {
 // Insure security
 function checkToken(c) {
   const token = c.req.query("token");
-  let expirenow = getExpire();
+  let expirenow = getExpireNow();
   let expiretoken = token.substring(0,4);
   if (expirenow > expiretoken) {
       throw new HTTPException(401, { message: 'Token expired' });
