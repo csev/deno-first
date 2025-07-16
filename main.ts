@@ -26,7 +26,14 @@ app.get("/kv/get/:key{.*}", async (c) => {
   const key = c.req.param("key");
   var karr = key.split('/');
   karr.unshift('student', token);
-  const result = await kv.get(karr);
+  var result = await kv.get(karr);
+  console.log('r1', result);
+  karr.key.shift();
+  console.log('r1', result);
+
+  karr.key.shift();
+  console.log('r1', result);
+
   return c.json(result);
 });
 
