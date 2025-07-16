@@ -16,7 +16,7 @@ app.post("/kv/set/:key{.*}", async (c) => {
   console.log("key", key);
   const body = await c.req.json();
   console.log(body);
-  var keyarr = key.split('/');
+  var karr = key.split('/');
   console.log("karr 1", karr);
   karr.unshift('student', token);
   console.log("karr 2", karr);
@@ -30,7 +30,7 @@ app.post("/kv/set/:key{.*}", async (c) => {
 app.get("/kv/get/:key{.*}", async (c) => {
   const token = checkToken(c);
   const key = c.req.param("key");
-  var keyarr = key.split('/');
+  var karr = key.split('/');
   karr.unshift('student', token);
   const result = await kv.get(karrr);
   return c.json(result);
@@ -41,7 +41,7 @@ app.get("/kv/get/:key{.*}", async (c) => {
 app.get("/kv/list/:key{.*}", async (c) => {
   const token = checkToken(c);
   const key = c.req.param("key");
-  var keyarr = key.split('/');
+  var karr = key.split('/');
   karr.unshift('student', token);
   const cursor = c.req.query("cursor");
   const extra = {'limit': 100};
@@ -61,7 +61,7 @@ app.get("/kv/list/:key{.*}", async (c) => {
 app.delete("/kv/delete/:key{.*}", async (c) => {
   const token = checkToken(c);
   const key = c.req.param("key");
-  var keyarr = key.split('/');
+  var karr = key.split('/');
   karr.unshift('student', token);
   const result = await kv.delete(karr);
   return c.json(result);
@@ -72,7 +72,7 @@ app.delete("/kv/delete/:key{.*}", async (c) => {
 app.delete("/kv/delete_prefix/:key{.*}", async (c) => {
   const token = checkToken(c);
   const key = c.req.param("key");
-  var keyarr = key.split('/');
+  var karr = key.split('/');
   karr.unshift('student', token);
   const iter = await kv.list({ prefix: karr });
   const keys = [];
