@@ -9,7 +9,6 @@ const kv = await Deno.openKv();
 // Set a record by key (POST body is JSON)
 // https://pg4e-deno-kv-api-10.deno.dev/set/books/Hamlet?key=123
 app.post("/kv/set/:key{.*}", async (c) => {
-  console.log("set");
   const token = checkToken(c);
   const key = c.req.param("key");
   const body = await c.req.json();
