@@ -158,8 +158,9 @@ function checkToken(c) {
   const token = c.req.query("token");
   let expirenow = getExpire();
   let expiretoken = token.substring(0,4);
-  if expirenow > expiretoken :
+  if (expirenow > expiretoken) {
       throw new HTTPException(401, { message: 'Token expired' });
+  }
 
   let tokenarr = token.split(':')
   console.log('arr', tokenarr);
