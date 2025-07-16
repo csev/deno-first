@@ -28,11 +28,10 @@ app.get("/kv/get/:key{.*}", async (c) => {
   karr.unshift('student', token);
   var result = await kv.get(karr);
   console.log('r1', result);
-  karr.key.shift();
-  console.log('r1', result);
-
-  karr.key.shift();
-  console.log('r1', result);
+  result.key.shift();
+  console.log('r2', result);
+  result.key.shift();
+  console.log('r3', result);
 
   return c.json(result);
 });
