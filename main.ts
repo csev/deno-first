@@ -153,6 +153,11 @@ function getExpireNow() {
 // Insure security
 function checkToken(c) {
   const token = c.req.query("token");
+  if ( token.size < 10 ) {
+    console.log('Token format incorrect', token);
+    throw new HTTPException(401, { message: 'Incorrect token format' }); 
+  }
+
   let expirenow = getExpireNow();
   let expiretoken = token.substring(0,4);
   if (expirenow > expiretoken) {
@@ -160,7 +165,10 @@ function checkToken(c) {
   }
 
   let tokenarr = token.split(':')
-  console.log('arr', tokenarr);
+  if ( tokenarr.length != 2 ) {
+      console.log('Token format incorrect', token, tokenarr);
+      throw new HTTPException(401, { message: 'Token format incorrect' });
+  }
   
   let secret = "42";
 
@@ -170,7 +178,6 @@ function checkToken(c) {
   
   return token;
   
-  throw new HTTPException(401, { message: 'Missing or invalid token' }); 
 }
 
 // Make sure we return the correct HTTP Status code when we throw an exception
