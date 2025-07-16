@@ -139,6 +139,22 @@ app.all('/dump/*', async (c) => {
 // Insure security
 function checkToken(c) {
   const token = c.req.query("token");
+  // Date three months from now
+  // 2025-10-16T03:15:18.917Z
+  let d = new Date(new Date().setMonth(new Date().getMonth() + 3));
+  console.log(d, typeof d);
+  let ds = d.toISOString();
+  console.log(ds, typeof ds);
+  // 2510 (year / month)
+  let expire = ds.substring(2,4) + ds.substring(5,7);
+  console.log(expire);
+
+  let user = "abc123";
+  let secret = "12345";
+
+  let plain = user + '_' + expire + '_' + secret;
+  console.log(plain);
+
   if ( token == '42' ) return token;
   
   throw new HTTPException(401, { message: 'Missing or invalid token' }); 
