@@ -150,6 +150,17 @@ function getExpireNow() {
   return expirenow;
 }
 
+// Four month ago
+function getExpireOld() {
+// Date four months ago
+    let d = new Date(new Date().setMonth(new Date().getMonth() - 4));
+    console.log(d, typeof d);
+    let ds = d.toISOString();
+    console.log(ds, typeof ds);
+    let expireold = ds.substring(2,4) + ds.substring(5,7);
+    return expireold;
+}
+
 // Insure security
 function checkToken(c) {
   const token = c.req.query("token");
@@ -189,6 +200,23 @@ app.onError((err, c) => {
   }
   console.error(err);
   return c.text('Internal Server Error', 500);
+});
+
+// If you are putting up your own server you can either delete this
+// CRON entry or change it to be once per month with "0 0 1 * *" as
+// the CRON string
+Deno.cron("Hourly DB Reset", "0 * * * *", async () => {
+  const ckv = await Deno.openKv();
+  const expirebefore = getExpireOld();
+  const iter = await ckv.list({ prefix: [ 'student', expirebefore ] });
+  const keys = [];
+  var count = 0;
+  for await (const entry of iter) {
+    ckv.delete(entry.key);
+    count++;
+    if ( count < 10 ) keys.push(entry.key);
+  }
+  console.log("Hourly reset keys deleted:", count, keys);
 });
 
 Deno.serve(app.fetch);
