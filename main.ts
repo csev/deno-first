@@ -144,12 +144,9 @@ var MD5 = function(d){var r = M(V(Y(X(d),8*d.length)));return r.toLowerCase()};f
 function getExpireNow() {
   // 2025-07-16T03:15:18.917Z
   let d = new Date();
-  console.log(d, typeof d);
   let ds = d.toISOString();
-  console.log(ds, typeof ds);
-  // 2510 (year / month)
+  // 2507 (year / month)
   let expirenow = ds.substring(2,4) + ds.substring(5,7);
-  console.log(expirenow);
   return expirenow;
 }
 
