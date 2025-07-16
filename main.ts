@@ -161,6 +161,7 @@ function checkToken(c) {
   let expirenow = getExpireNow();
   let expiretoken = token.substring(0,4);
   if (expirenow > expiretoken) {
+      console.log('Token expired', token, expirenow);
       throw new HTTPException(401, { message: 'Token expired' });
   }
 
@@ -173,13 +174,11 @@ function checkToken(c) {
   let secret = "42";
 
   let plain = tokenarr[0] + ':' + secret;
-  console.log(plain);
   let md5 = MD5(plain).substring(0,6);
-  console.log(md5);
   let computed = tokenarr[0] + ':' + md5;
-  console.log(computed,token);
   if ( computed == token ) return token;
-
+  
+  console.log("Token invalid", computed, token);
   throw new HTTPException(401, { message: 'Token invalid' });
 }
 
