@@ -174,10 +174,13 @@ function checkToken(c) {
 
   let plain = tokenarr[0] + ':' + secret;
   console.log(plain);
-  console.log(MD5(plain));
-  
-  return token;
-  
+  let md5 = MD5(plain).substring(0,6);
+  console.log(md5);
+  let computed = tokenarr[0] + ':' + md5;
+  console.log(computed,token);
+  if ( computed == token ) return token;
+
+  throw new HTTPException(401, { message: 'Token invalid' });
 }
 
 // Make sure we return the correct HTTP Status code when we throw an exception
