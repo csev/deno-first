@@ -208,10 +208,12 @@ app.onError((err, c) => {
 Deno.cron("Hourly DB Reset", "0 * * * *", async () => {
   const ckv = await Deno.openKv();
   const expirebefore = getExpireOld();
-  const iter = await ckv.list({ prefix: [ 'student', expirebefore ] });
+  const iter = await ckv.list({ prefix: [ 'student' ] });
   const keys = [];
   var count = 0;
   for await (const entry of iter) {
+    const key = entry.key.substring(0,4);
+    if ( key >= expirebefore ) continue;
     ckv.delete(entry.key);
     count++;
     if ( count < 10 ) keys.push(entry.key);
