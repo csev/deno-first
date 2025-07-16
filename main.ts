@@ -27,12 +27,8 @@ app.get("/kv/get/:key{.*}", async (c) => {
   var karr = key.split('/');
   karr.unshift('student', token);
   var result = await kv.get(karr);
-  console.log('r1', result);
   result.key.shift();
-  console.log('r2', result);
   result.key.shift();
-  console.log('r3', result);
-
   return c.json(result);
 });
 
@@ -51,6 +47,8 @@ app.get("/kv/list/:key{.*}", async (c) => {
   const iter = await kv.list({ prefix: karr }, extra );
   const records = [];
   for await (const entry of iter) {
+    entry.key.shift();
+    entry.key.shift();
     records.push(entry);
   }
   return c.json({'records': records, 'cursor': iter.cursor});
