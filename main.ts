@@ -1,5 +1,6 @@
 import { Hono } from "https://deno.land/x/hono@v3.4.1/mod.ts";
 import { HTTPException } from "https://deno.land/x/hono@v3.12.10/http-exception.ts";
+import { createHash } from "https://deno.land/std/hash/mod.ts";
 
 const app = new Hono();
 const kv = await Deno.openKv();
@@ -154,6 +155,9 @@ function checkToken(c) {
 
   let plain = user + '_' + expire + '_' + secret;
   console.log(plain);
+
+  let md5 = createHash("md5").update(plain).toString();
+  console.log('md5', md5);
 
   if ( token == '42' ) return token;
   
