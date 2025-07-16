@@ -11,17 +11,11 @@ const kv = await Deno.openKv();
 app.post("/kv/set/:key{.*}", async (c) => {
   console.log("set");
   const token = checkToken(c);
-  console.log("token", token);
   const key = c.req.param("key");
-  console.log("key", key);
   const body = await c.req.json();
-  console.log(body);
   var karr = key.split('/');
-  console.log("karr 1", karr);
   karr.unshift('student', token);
-  console.log("karr 2", karr);
   const result = await kv.set(karr, body);
-  console.log("result", result);
   return c.json(result);
 });
 
@@ -32,7 +26,7 @@ app.get("/kv/get/:key{.*}", async (c) => {
   const key = c.req.param("key");
   var karr = key.split('/');
   karr.unshift('student', token);
-  const result = await kv.get(karrr);
+  const result = await kv.get(karr);
   return c.json(result);
 });
 
