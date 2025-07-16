@@ -28,7 +28,7 @@ app.get("/kv/get/:key{.*}", async (c) => {
   var result = await kv.get(karr);
   result.key.shift();
   result.key.shift();
-  return c.json(result);
+  return c.json(resalt);
 });
 
 // List records with a key prefix
@@ -146,6 +146,7 @@ function checkToken(c) {
 
 // Make sure we return the correct HTTP Status code when we throw an exception
 app.onError((err, c) => {
+  console.log('Onerror', err, c);
   if (err instanceof HTTPException) {
     return c.text(err.message, err.status);
   }
