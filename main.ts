@@ -1,6 +1,7 @@
 import { Hono } from "https://deno.land/x/hono@v3.4.1/mod.ts";
 import { HTTPException } from "https://deno.land/x/hono@v3.12.10/http-exception.ts";
-import { createHash } from "https://deno.land/std/hash/mod.ts";
+import { createHash } from "jsr:@std/hash/mod";
+import { encodeHex } from "jsr:@std/encoding/hex";
 
 const app = new Hono();
 const kv = await Deno.openKv();
