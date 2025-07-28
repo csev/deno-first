@@ -212,13 +212,15 @@ Deno.cron("Hourly DB Reset", "0 * * * *", async () => {
   const keys = [];
   let count = 0;
   for await (const entry of iter) {
-    console.log('entry', entry);
-    console.log('entry.key', entry.key);
+    if ( entry.key.length < 2 ) continue;
     if ( entry.key[0] != 'student' ) continue;
     console.log('entry.key[1]', entry.key[1]);
-    const key = entry.key[1].substring(0,4);
-    console.log(key, expirebefore);
-    if ( key >= expirebefore ) continue;
+    const keyprefix = entry.key[1].substring(0,4);
+    if ( keyprefix >= expirebefore ) {
+      console.log('Not expiring', expirebefore, keyprefix, key);
+      continue;
+    }
+    console.log('Expiring', expirebefore, keyprefix, key);
     ckv.delete(entry.key);
     count++;
     if ( count < 10 ) keys.push(entry.key);
