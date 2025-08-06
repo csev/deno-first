@@ -205,7 +205,7 @@ app.onError((err, c) => {
 // If you are putting up your own server you can either delete this
 // CRON entry or change it to be once per month with "0 0 1 * *" as
 // the CRON string
-Deno.cron("Hourly DB Reset", "0,10,20,30,40,50,60 * * * *", async () => {
+Deno.cron("Hourly DB Reset", "*/10 * * * *", async () => {
   const ckv = await Deno.openKv();
   const expirebefore = getExpireOld();
   const iter = await ckv.list({ prefix: [ 'student' ] });
