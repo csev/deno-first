@@ -154,9 +154,7 @@ function getExpireNow() {
 function getExpireOld() {
 // Date four months ago
     let d = new Date(new Date().setMonth(new Date().getMonth() - 4));
-    console.log(d, typeof d);
     let ds = d.toISOString();
-    console.log(ds, typeof ds);
     let expireold = ds.substring(2,4) + ds.substring(5,7);
     return expireold;
 }
